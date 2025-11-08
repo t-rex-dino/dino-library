@@ -1,1 +1,26 @@
-{}
+{
+  "name": "dino/library",
+  "description": "A modular PHP library for reusable components",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "t-rex-dino",
+      "email": "t.rex.dino.7470@gmail.com",
+      "homepage": "https://github.com/t-rex-dino",
+      "role": "Maintainer"
+    }
+  ],
+  "keywords": ["php", "library", "modular", "utilities"],
+  "autoload": {
+    "psr-4": {
+      "Dino\\": "src/"
+    }
+  },
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^10.0"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
