@@ -23,17 +23,37 @@
         }
     ],
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.1",
+        "psr/container": "^2.0",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "mockery/mockery": "^1.6"
     },
     "autoload": {
         "psr-4": {
             "Dino\\": "src/"
         }
     },
-    "require-dev": {
-        "phpunit/phpunit": "^10.0"
+    "autoload-dev": {
+        "psr-4": {
+            "Dino\\Tests\\": "tests/"
+        }
     },
     "scripts": {
         "test": "phpunit"
-    }
+    },
+    "keywords": [
+        "dependency injection",
+        "service container", 
+        "configuration",
+        "php",
+        "library",
+        "psr-11",
+        "service management",
+        "dependency injection container",
+        "modular",
+        "lightweight"
+    ]
 }
