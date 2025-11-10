@@ -1,4 +1,4 @@
-![Dino Library Banner](../assets/dino-banner.jpeg)
+![Dino Library Banner](assets/dino-banner.jpeg)
 # 🦕 Dino Library Documentation
 
 Welcome to the official documentation for **Dino Library** — a lightweight, extensible PHP library for service and configuration management.
