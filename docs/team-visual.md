@@ -1,4 +1,4 @@
-![Dino Library Banner](../assets/dino-banner.jpeg)
+![Dino Library Banner](assets/dino-banner.jpeg)
 ## 🦕 Dino Library – Team Visualization (Textual Description)
 
 In a prehistoric jungle-tech lab, three anthropomorphic dinosaurs collaborate around a large stone table. Each represents a unique role in the Dino Library project:
