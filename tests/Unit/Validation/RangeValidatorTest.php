@@ -1,0 +1,54 @@
+<?php
+
+namespace Dino\Tests\Unit\Validation;
+
+use Dino\Validation\Rules\RangeValidator;
+use Dino\Exceptions\ValidationException;
+use PHPUnit\Framework\TestCase;
+
+class RangeValidatorTest extends TestCase
+{
+    private RangeValidator $validator;
+
+    protected function setUp(): void
+    {
+        $this->validator = new RangeValidator();
+    }
+
+    public function testSupportsRangeRule(): void
+    {
+        $this->assertTrue($this->validator->supports('range'));
+        $this->assertFalse($this->validator->supports('required'));
+    }
+
+    public function testValidValueWithinRangePassesValidation(): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        $this->validator->validate(10, ['min' => 1, 'max' => 20]);
+    }
+
+    public function testValueBelowRangeThrowsException(): void
+    {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("must be between");
+
+        $this->validator->validate(-5, ['configKey' => 'app.port', 'min' => 1, 'max' => 100]);
+    }
+
+    public function testValueAboveRangeThrowsException(): void
+    {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("must be between");
+
+        $this->validator->validate(200, ['configKey' => 'app.port', 'min' => 1, 'max' => 100]);
+    }
+
+    public function testNonNumericValueThrowsException(): void
+    {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("must be numeric");
+
+        $this->validator->validate("abc", ['configKey' => 'app.port', 'min' => 1, 'max' => 100]);
+    }
+}

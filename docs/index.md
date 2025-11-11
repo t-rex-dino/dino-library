@@ -1,4 +1,5 @@
 ![Dino Library Banner](assets/dino-banner.jpeg)
+
 # 🦕 Dino Library Documentation
 
 Welcome to the official documentation for **Dino Library** — a lightweight, extensible PHP library for service and configuration management.
@@ -15,6 +16,7 @@ Welcome to the official documentation for **Dino Library** — a lightweight, ex
 *   [Architecture Overview](Guides/architecture-overview.md)
 *   [Design Patterns](Guides/design-patterns.md)
 *   [Config Handlers](Guides/config-handlers.md)
+*   [Validation System (New)](Guides/validation-system.md)
 *   [Event System Guide](Guides/event-system.md)
 
 ### 🎓 Tutorials
@@ -27,33 +29,16 @@ Welcome to the official documentation for **Dino Library** — a lightweight, ex
 
 *   [Basic Usage Explained](Examples/basic-usage-explained.md)
 *   [Config Handler Demo Explained](Examples/config-handler-demo-explained.md)
+*   [Config Validation Explained (New)](Examples/config-validation-explained.md)
 *   [Service Container Demo Explained](Examples/service-container-demo-explained.md)
 *   [Cached Config Loader Demo Explained](Examples/cached-config-loader-demo-explained.md)
-
 
 ### 📖 API Reference
 
 *   [LibraryManager](API-Reference/LibraryManager.md)
 *   [ConfigHandler](API-Reference/ConfigHandler.md)
+*   [ValidatorInterface (New)](API-Reference/ValidatorInterface.md)
 *   [ServiceContainer](API-Reference/ServiceContainer.md)
 *   [FactoryInterface](API-Reference/FactoryInterface.md)
 *   [ServiceInterface](API-Reference/ServiceInterface.md)
 *   [ServiceProviderInterface](API-Reference/ServiceProviderInterface.md)
-*   [ConfigurableInterface](API-Reference/ConfigurableInterface.md)
-
-- - -
-
-## 🚀 Installation
-
-Install via Composer:
-
-```bash
-composer require t-rex-dino/dino-library
-```
-
-- - -
-
-## 🤝 Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.  
-Meet the team:[](team-visual.md)

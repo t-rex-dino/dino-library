@@ -1,42 +1,57 @@
-## 🧠 CachedConfigLoader
+# Config Handlers Guide
 
-The `CachedConfigLoader` wraps any `ConfigLoaderInterface` and adds caching support using a PSR-16-like `CacheInterface`.
+The `ConfigHandler` provides a flexible way to manage configuration values with support for dot notation, hierarchical structures, and validation rules.
 
-### Usage
+## Basic Usage
 
 ```php
 
-$loader = new ConfigLoader();
-$loader->addParser(new JsonConfigParser());
-
-$cache = new ArrayCache();
-$cachedLoader = new CachedConfigLoader($loader, $cache);
-
-$config = $cachedLoader->load('config.json');
+$config = new ConfigHandler();
+$config->set('app.name', 'Dino Library');
+$config->set('database.connections.mysql.host', 'localhost');
 ```
 
-### Cache Invalidation
+## Loading Configuration
 
 ```php
 
-$cachedLoader->invalidate('config.json');
+$config->loadFromFile('config/app.php');
 ```
 
-### Cache Key Strategy
+## Configuration Validation (New in v1.1.1)
 
-*   Key is based on file path + `filemtime()`
-*   Ensures cache is invalidated when file changes
+Starting from version **1.1.1**, the `ConfigHandler` supports validation rules to ensure configuration integrity.
 
-### Default TTL
-
-*   Default TTL is 3600 seconds (1 hour)
-*   Can be customized via constructor
-
-### ArrayCache Example
+### Defining Validation Rules
 
 ```php
 
-$cache = new ArrayCache();
-$cache->set('key', ['value' => 123]);
-$data = $cache->get('key');
+$config->setValidationRules([
+    'app.name'  => ['required', 'type:string'],
+    'app.port'  => ['required', 'type:int', 'range'],
+    'app.email' => ['required', 'regex']
+]);
+```
+
+### Registering Validators
+
+```php
+
+$config->registerValidator(new RequiredValidator());
+$config->registerValidator(new TypeValidator());
+$config->registerValidator(new RangeValidator());
+$config->registerValidator(new RegexValidator());
+```
+
+### Validation in Action
+
+```php
+
+try {
+    $config->set('app.port', 8080, ['min' => 1, 'max' => 65535]);
+    $config->set('app.email', 'user@example.com', ['pattern' => '/^[^@]+@[^@]+\.[^@]+$/']);
+    echo "✅ Configuration values are valid.";
+} catch (ValidationException $e) {
+    echo "❌ Validation failed: " . $e->getMessage();
+}
 ```
