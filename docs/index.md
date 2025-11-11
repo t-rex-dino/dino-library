@@ -14,6 +14,8 @@ Welcome to the official documentation for **Dino Library** — a lightweight, ex
 *   [Service Container Guide](Guides/service-container-guide.md)
 *   [Architecture Overview](Guides/architecture-overview.md)
 *   [Design Patterns](Guides/design-patterns.md)
+*   [Config Handlers](Guides/config-handlers.md)
+*   [Event System Guide](Guides/event-system.md)
 
 ### 🎓 Tutorials
 
@@ -26,6 +28,8 @@ Welcome to the official documentation for **Dino Library** — a lightweight, ex
 *   [Basic Usage Explained](Examples/basic-usage-explained.md)
 *   [Config Handler Demo Explained](Examples/config-handler-demo-explained.md)
 *   [Service Container Demo Explained](Examples/service-container-demo-explained.md)
+*   [Cached Config Loader Demo Explained](Examples/cached-config-loader-demo-explained.md)
+
 
 ### 📖 API Reference
 

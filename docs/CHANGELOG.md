@@ -1,4 +1,4 @@
-# Changelog
+# 📦 Changelog
 
 All notable changes to the Dino Library project will be documented in this file.
 
@@ -174,3 +174,29 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *   Thanks to the PHP-FIG for PSR standards
 *   Inspired by modern PHP frameworks and libraries
 *   Built with AI collaboration between DeepSeek and GitHub Copilot
+
+## [1.1.0] - 2025-11-11
+
+### ✨ Added
+- `ConfigLoader` support for JSON and YAML formats
+- `CachedConfigLoader` with PSR-16 compatible caching
+- `ArrayCache` implementation for in-memory testing
+- `EventDispatcherInterface` and `EventDispatcher` for service lifecycle events
+- `ServiceLifecycleEvents` constants for standardized event names
+- Unit tests for `CachedConfigLoader` and event system
+- Examples: `config-handler-demo.php`, `cached-config-loader-demo.php`
+- Documentation: config handlers, event system
+
+### 🛠️ Changed
+- Extended `ConfigLoaderInterface` to support caching decorators
+
+### ✅ Quality
+- 16 unit tests passed
+- 21 assertions successful
+- All examples executed successfully
+- Documentation fully updated
+
+### 📎 Notes
+- Compatible with PHP 8.2+
+- Ready for Packagist release
+
