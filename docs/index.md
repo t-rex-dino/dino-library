@@ -18,12 +18,17 @@ Welcome to the official documentation for **Dino Library** — a lightweight, ex
 *   [Config Handlers](Guides/config-handlers.md)
 *   [Validation System (New)](Guides/validation-system.md)
 *   [Event System Guide](Guides/event-system.md)
+*   [Lazy Loading (New in 1.2.0)](Guides/lazy-loading.md)
+*   [Service Tagging & Grouping (New in 1.2.0)](Guides/service-tagging.md)
+*   [Dependency Resolution (New in 1.2.0)](Guides/dependency-resolution.md)
 
 ### 🎓 Tutorials
 
 *   [Getting Started](Tutorials/getting-started.md)
 *   [Advanced Usage](Tutorials/advanced-usage.md)
 *   [Troubleshooting](Tutorials/troubleshooting.md)
+*   [Advanced Dependency Injection (New in 1.2.0)](Tutorials/dependency-injection-advanced.md)
+*   [Tagging & Grouping Walkthrough (New in 1.2.0)](Tutorials/service-tagging-and-grouping.md)
 
 ### 🧪 Examples
 
@@ -32,13 +37,7 @@ Welcome to the official documentation for **Dino Library** — a lightweight, ex
 *   [Config Validation Explained (New)](Examples/config-validation-explained.md)
 *   [Service Container Demo Explained](Examples/service-container-demo-explained.md)
 *   [Cached Config Loader Demo Explained](Examples/cached-config-loader-demo-explained.md)
+*   [Service Tagging Demo Explained (New in 1.2.0)](Examples/service-tagging-demo-explained.md)
+*   [Advanced DI Demo Explained (New in 1.2.0)](Examples/advanced-di-demo-explained.md)
 
 ### 📖 API Reference
-
-*   [LibraryManager](API-Reference/LibraryManager.md)
-*   [ConfigHandler](API-Reference/ConfigHandler.md)
-*   [ValidatorInterface (New)](API-Reference/ValidatorInterface.md)
-*   [ServiceContainer](API-Reference/ServiceContainer.md)
-*   [FactoryInterface](API-Reference/FactoryInterface.md)
-*   [ServiceInterface](API-Reference/ServiceInterface.md)
-*   [ServiceProviderInterface](API-Reference/ServiceProviderInterface.md)

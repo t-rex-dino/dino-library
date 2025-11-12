@@ -8,7 +8,8 @@ Dino Library is a lightweight, extensible PHP library designed to manage service
 
 ## 🚀 Installation
 
-```bash
+```
+
 composer require t-rex-dino/dino-library
 ```
 
@@ -28,6 +29,12 @@ tests/
 
 examples/
 ├── *.php                // Practical usage examples
+
+docs/
+├── Guides/              // Conceptual guides
+├── API-Reference/       // API documentation
+├── Examples/            // Example explanations
+├── Tutorials/           // Step-by-step tutorials
 ```
 
 - - -
@@ -36,7 +43,7 @@ examples/
 
 ### LibraryManager
 
-```php
+```
 
 use Dino\Core\LibraryManager;
 
@@ -45,47 +52,21 @@ $manager->register('logger', new Logger());
 $logger = $manager->get('logger');
 ```
 
-### ConfigHandler
+### ConfigHandler with Validation
 
-```php
+```
 
 use Dino\Core\ConfigHandler;
 use Dino\Validation\Rules\RequiredValidator;
-use Dino\Validation\Rules\TypeValidator;
-use Dino\Validation\Rules\RangeValidator;
-use Dino\Validation\Rules\RegexValidator;
 
 $config = new ConfigHandler();
-
-// Register validators
 $config->registerValidator(new RequiredValidator());
-$config->registerValidator(new TypeValidator());
-$config->registerValidator(new RangeValidator());
-$config->registerValidator(new RegexValidator());
-
-// Define rules
-$config->setValidationRules([
-    'app.name'  => ['required', 'type:string'],
-    'app.port'  => ['required', 'type:int', 'range'],
-    'app.email' => ['required', 'regex']
-]);
-
-// Valid configuration
 $config->set('app.name', 'Dino Library');
-$config->set('app.port', 8080, ['min' => 1, 'max' => 65535]);
-$config->set('app.email', 'user@example.com', ['pattern' => '/^[^@]+@[^@]+\.[^@]+$/']);
-
-// Invalid configuration
-try {
-    $config->set('app.port', 70000, ['min' => 1, 'max' => 65535]);
-} catch (ValidationException $e) {
-    echo "❌ Validation failed: " . $e->getMessage();
-}
 ```
 
-### ServiceContainer
+### ServiceContainer with Factory
 
-```php
+```
 
 use Dino\Core\ServiceContainer;
 use Dino\Contracts\FactoryInterface;
@@ -101,11 +82,28 @@ $container->addFactory('logger', new LoggerFactory());
 $logger = $container->get('logger');
 ```
 
+### ⚡ Lazy Loading
+
+```
+
+$container->singleton('heavyService', fn() => new HeavyService(), true);
+$service = $container->get('heavyService'); // created only when accessed
+```
+
+### 🔗 Dependency Injection
+
+```
+
+$resolver = new DependencyResolver($container);
+$controller = $resolver->resolve(Controller::class);
+```
+
 - - -
 
 ## 🧪 Running Tests
 
-```bash
+```
+
 vendor/bin/phpunit --bootstrap tests/bootstrap.php tests/Unit
 ```
 
@@ -118,12 +116,15 @@ Example files are located in the `examples/` directory:
 *   basic-usage.php
 *   config-handler-demo.php
 *   service-container-demo.php
-*   config-validation-demo.php (New)
+*   config-validation-demo.php
+*   service-provider-demo.php (New in 1.2.0)
+*   lazy-loading-demo.php (New in 1.2.0)
+*   service-tagging-demo.php (New in 1.2.0)
+*   advanced-di-demo.php (New in 1.2.0)
 
-Run them using:
+```
 
-```bash
-php examples/config-validation-demo.php
+php examples/advanced-di-demo.php
 ```
 
 - - -
