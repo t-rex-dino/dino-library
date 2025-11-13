@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Dino\Core\LibraryManager;
-use Dino\Exceptions\ServiceException;
+use Dino\Exceptions\ServiceNotFoundException;
 
 final class LibraryManagerTest extends TestCase
 {
@@ -28,7 +28,7 @@ final class LibraryManagerTest extends TestCase
 
     public function testGetMissingServiceThrowsException(): void
     {
-        $this->expectException(ServiceException::class);
+        $this->expectException(ServiceNotFoundException::class);
 
         $manager = new LibraryManager();
         $manager->get('unknown');

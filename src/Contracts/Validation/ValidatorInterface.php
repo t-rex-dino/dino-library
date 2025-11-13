@@ -2,7 +2,7 @@
 
 namespace Dino\Contracts\Validation;
 
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigValidationException;
 
 interface ValidatorInterface
 {
@@ -12,7 +12,7 @@ interface ValidatorInterface
      * @param mixed $value   The value to validate
      * @param array $context Optional context (e.g., config key, metadata)
      *
-     * @throws ValidationException If validation fails
+     * @throws ConfigValidationException If validation fails
      */
     public function validate(mixed $value, array $context = []): void;
 

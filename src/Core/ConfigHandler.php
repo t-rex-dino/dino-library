@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dino\Core;
 
-use Dino\Exceptions\ConfigurationException;
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigNotFoundException;
+use Dino\Exceptions\ConfigValidationException;
 use Dino\Contracts\Validation\ValidatorInterface;
 use Dino\Core\Validation\ValidatorRegistry;
 
@@ -18,7 +18,7 @@ use Dino\Core\Validation\ValidatorRegistry;
  *
  * @package Dino\Core
  * @since 1.0.0
- * @version 1.1.1
+ * @version 1.2.1
  */
 class ConfigHandler
 {
@@ -77,7 +77,7 @@ class ConfigHandler
      *
      * @return void
      *
-     * @throws ValidationException If validation fails
+     * @throws ConfigValidationException If validation fails
      */
     public function set(string $key, mixed $value, array $context = []): void
     {
@@ -91,12 +91,15 @@ class ConfigHandler
      * @param string $key
      * @return mixed
      *
-     * @throws ConfigurationException If the key does not exist
+     * @throws ConfigNotFoundException If the key does not exist
      */
     public function get(string $key): mixed
     {
         if (!array_key_exists($key, $this->config)) {
-            throw new ConfigurationException("Configuration key '{$key}' not found.");
+            throw new ConfigNotFoundException(
+                $key,
+                ['reason' => 'Configuration key not found']
+            );
         }
 
         return $this->config[$key];
@@ -113,34 +116,69 @@ class ConfigHandler
         return array_key_exists($key, $this->config);
     }
 
-    /**
-     * Validate a configuration value against defined rules
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param array<string, mixed> $context
-     *
-     * @throws ValidationException
-     */
     private function validate(string $key, mixed $value, array $context = []): void
     {
         if (!isset($this->validationRules[$key])) {
-            return; // no rules defined for this key
+            return;
         }
 
-        foreach ($this->validationRules[$key] as $rule) {
-            $validator = $this->validatorRegistry->getValidatorForRule($rule);
-            if ($validator === null) {
-                throw new ValidationException("No validator found for rule '{$rule}'", [
-                    'configKey' => $key,
-                    'rule' => $rule
-                ]);
+        $rules = $this->validationRules[$key];
+        $errors = [];
+
+        foreach ($rules as $rule) {
+            if (!$this->validatorRegistry->supports($rule)) {
+                continue;
             }
 
-            $validator->validate($value, array_merge($context, [
-                'configKey' => $key,
-                'rule' => $rule
-            ]));
+            try {
+                // تجزیه rule به نام و پارامترها
+                $ruleName = $rule;
+                $ruleParams = [];
+                
+                if (str_contains($rule, ':')) {
+                    list($ruleName, $paramString) = explode(':', $rule, 2);
+                    $ruleParams = $this->parseRuleParams($ruleName, $paramString);
+                }
+                
+                // ترکیب context اصلی با پارامترهای rule
+                $validationContext = array_merge($context, $ruleParams, ['configKey' => $key]);
+                
+                $this->validatorRegistry->validate($ruleName, $value, $validationContext);
+            } catch (ConfigValidationException $e) {
+                $errors[] = $e->getErrorMessage();
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new ConfigValidationException(
+                $key,
+                array_merge($context, [
+                    'errors' => $errors,
+                    'rules' => $rules,
+                    'value' => $value
+                ])
+            );
+        }
+    }
+    
+    private function parseRuleParams(string $ruleName, string $paramString): array
+    {
+        switch ($ruleName) {
+            case 'type':
+                return ['expectedType' => $paramString];
+                
+            case 'range':
+                if (str_contains($paramString, '-')) {
+                    list($min, $max) = explode('-', $paramString, 2);
+                    return ['min' => (int)$min, 'max' => (int)$max];
+                }
+                return [];
+                
+            case 'regex':
+                return ['pattern' => $paramString];
+                
+            default:
+                return [];
         }
     }
 }

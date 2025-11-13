@@ -12,14 +12,14 @@ class ConfigLoaderTest extends TestCase
         $loader = new ConfigLoader();
         $loader->addParser(new JsonConfigParser());
 
-        // ایجاد فایل موقت
+        // create temp file
         $filePath = tempnam(sys_get_temp_dir(), 'dino_test_') . '.json';
         file_put_contents($filePath, '{"app":{"name":"Dino"}}');
 
         $result = $loader->load($filePath);
         $this->assertEquals(['app' => ['name' => 'Dino']], $result);
 
-        // حذف فایل موقت
+        // remove temp file
         unlink($filePath);
     }
 }

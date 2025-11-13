@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Dino\Core\Config\Parsers\YamlConfigParser;
-use Dino\Exceptions\InvalidConfigFormatException;
+use Dino\Exceptions\ConfigParserException;
 
 class YamlConfigParserTest extends TestCase
 {
@@ -17,7 +17,7 @@ class YamlConfigParserTest extends TestCase
 
     public function testInvalidYaml(): void
     {
-        $this->expectException(InvalidConfigFormatException::class);
+        $this->expectException(ConfigParserException::class);
         $parser = new YamlConfigParser();
         $parser->parse("app: name: Dino:"); // malformed
     }

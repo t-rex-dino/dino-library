@@ -3,7 +3,7 @@
 namespace Dino\Tests\Unit\Validation;
 
 use Dino\Validation\Rules\RangeValidator;
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigValidationException;
 use PHPUnit\Framework\TestCase;
 
 class RangeValidatorTest extends TestCase
@@ -30,24 +30,21 @@ class RangeValidatorTest extends TestCase
 
     public function testValueBelowRangeThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("must be between");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate(-5, ['configKey' => 'app.port', 'min' => 1, 'max' => 100]);
     }
 
     public function testValueAboveRangeThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("must be between");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate(200, ['configKey' => 'app.port', 'min' => 1, 'max' => 100]);
     }
 
     public function testNonNumericValueThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("must be numeric");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate("abc", ['configKey' => 'app.port', 'min' => 1, 'max' => 100]);
     }

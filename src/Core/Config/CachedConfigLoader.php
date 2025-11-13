@@ -5,6 +5,7 @@ namespace Dino\Core\Config;
 
 use Dino\Contracts\CacheInterface;
 use Dino\Contracts\ConfigLoaderInterface;
+use Dino\Exceptions\ConfigNotFoundException;
 
 class CachedConfigLoader implements ConfigLoaderInterface
 {
@@ -37,7 +38,10 @@ class CachedConfigLoader implements ConfigLoaderInterface
     private function generateCacheKey(string $filePath): string
     {
         if (!file_exists($filePath)) {
-            throw new \InvalidArgumentException("Config file not found: $filePath");
+            throw new ConfigNotFoundException(
+                $filePath,
+                ['reason' => 'File does not exist']
+            );
         }
 
         $fileHash = md5($filePath . filemtime($filePath));

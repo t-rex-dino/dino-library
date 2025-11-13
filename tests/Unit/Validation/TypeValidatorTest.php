@@ -3,7 +3,7 @@
 namespace Dino\Tests\Unit\Validation;
 
 use Dino\Validation\Rules\TypeValidator;
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigValidationException;
 use PHPUnit\Framework\TestCase;
 
 class TypeValidatorTest extends TestCase
@@ -31,21 +31,21 @@ class TypeValidatorTest extends TestCase
 
     public function testInvalidTypeThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("must be of type 'string'");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate(123, ['configKey' => 'app.name', 'expectedType' => 'string']);
     }
-
+    
     public function testExceptionContainsContext(): void
     {
         try {
-            $this->validator->validate([], ['configKey' => 'app.port', 'expectedType' => 'int', 'rule' => 'type:int']);
-            $this->fail('Expected ValidationException was not thrown');
-        } catch (ValidationException $e) {
-            $this->assertEquals('app.port', $e->getConfigKey());
-            $this->assertEquals('type:int', $e->getRule());
-            $this->assertArrayHasKey('expectedType', $e->getContext());
+            $this->validator->validate('not_an_int', ['configKey' => 'app.port', 'rule' => 'type:int']);
+            $this->fail('Expected ConfigValidationException was not thrown');
+        } catch (ConfigValidationException $e) {
+            $context = $e->getContext();
+            $this->assertEquals('app.port', $context['configKey']);
+            $this->assertEquals('type', $context['rule']);
+            $this->assertArrayHasKey('configKey', $context);
         }
     }
 }

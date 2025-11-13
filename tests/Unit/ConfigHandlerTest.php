@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Dino\Core\ConfigHandler;
-use Dino\Exceptions\ConfigurationException;
+use Dino\Exceptions\ConfigNotFoundException;
 
 final class ConfigHandlerTest extends TestCase
 {
@@ -27,7 +27,7 @@ final class ConfigHandlerTest extends TestCase
 
     public function testGetMissingConfigThrowsException(): void
     {
-        $this->expectException(ConfigurationException::class);
+        $this->expectException(ConfigNotFoundException::class);
 
         $config = new ConfigHandler();
         $config->get('unknown');

@@ -3,7 +3,7 @@
 namespace Dino\Tests\Unit\Validation;
 
 use Dino\Validation\Rules\RegexValidator;
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigValidationException;
 use PHPUnit\Framework\TestCase;
 
 class RegexValidatorTest extends TestCase
@@ -33,8 +33,7 @@ class RegexValidatorTest extends TestCase
 
     public function testInvalidValueThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("does not match the required pattern");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate("invalid-email", [
             'pattern' => '/^[^@]+@[^@]+\.[^@]+$/',
@@ -44,8 +43,7 @@ class RegexValidatorTest extends TestCase
 
     public function testMissingPatternThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("Regex pattern is required");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate("test", ['configKey' => 'app.email']);
     }

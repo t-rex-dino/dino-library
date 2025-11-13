@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Dino\Core\Config\Parsers;
 
 use Dino\Contracts\ConfigParserInterface;
-use Dino\Exceptions\InvalidConfigFormatException;
+use Dino\Exceptions\ConfigParserException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
@@ -16,8 +16,9 @@ class YamlConfigParser implements ConfigParserInterface
             $data = Yaml::parse($content);
             return is_array($data) ? $data : [];
         } catch (ParseException $e) {
-            throw new InvalidConfigFormatException(
-                'YAML parsing error: ' . $e->getMessage()
+            throw new ConfigParserException(
+                'config.yaml',
+                ['error' => $e->getMessage()]
             );
         }
     }

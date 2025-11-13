@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dino\Core;
 
+use Dino\Exceptions\ServiceNotFoundException;
+
 class LibraryManager
 {
     protected array $services = [];
@@ -16,7 +18,10 @@ class LibraryManager
     public function get(string $name): object
     {
         if (!isset($this->services[$name])) {
-            throw new \Dino\Exceptions\ServiceException("Service '{$name}' not found.");
+            throw new ServiceNotFoundException(
+                $name,
+                ['reason' => 'Service not registered in LibraryManager']
+            );
         }
 
         return $this->services[$name];

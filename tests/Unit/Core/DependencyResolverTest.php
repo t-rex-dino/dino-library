@@ -4,6 +4,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Dino\Core\ServiceContainer;
 use Dino\Core\DependencyResolver;
+use Dino\Exceptions\CircularDependencyException;
 
 // Example interface and implementation
 interface EngineInterface {
@@ -77,7 +78,7 @@ final class DependencyResolverTest extends TestCase
         $container = new ServiceContainer();
         $resolver = new DependencyResolver($container);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(CircularDependencyException::class);
         $this->expectExceptionMessage('Circular dependency detected');
 
         // Attempt to resolve CircularA which depends on CircularB and vice versa

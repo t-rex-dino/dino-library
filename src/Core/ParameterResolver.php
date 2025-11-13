@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Dino\Core;
 
 use ReflectionParameter;
-use RuntimeException;
+use Dino\Exceptions\CircularDependencyException;
+use Dino\Exceptions\UnresolvableParameterException;
 
 class ParameterResolver
 {
@@ -20,7 +21,10 @@ class ParameterResolver
 
             // Circular dependency guard
             if (isset($this->resolvingTypes[$className])) {
-                throw new RuntimeException("Circular dependency detected for: {$className}");
+                throw new CircularDependencyException(
+                    $className,
+                    ['reason' => "Circular dependency detected for {$className}"]
+                );
             }
 
             $this->resolvingTypes[$className] = true;
@@ -50,6 +54,9 @@ class ParameterResolver
         }
 
         $typeName = $type ? $type->getName() : 'mixed';
-        throw new RuntimeException("Cannot resolve parameter: {$paramName} of type: {$typeName}");
+        throw new UnresolvableParameterException(
+            $paramName,
+            ['type' => $typeName, 'reason' => 'Parameter could not be resolved']
+        );
     }
 }

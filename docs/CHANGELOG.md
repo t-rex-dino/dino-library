@@ -1,3 +1,5 @@
+ Dino Library Changelog
+
 # 📦 Changelog
 
 All notable changes to the Dino Library project will be documented in this file.
@@ -56,3 +58,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### 🛠️ Changed
 
 *   ConfigHandler::set() now integrates validation
+
+## \[1.2.1\] - 2025-11-13
+
+### ✨ Added
+
+*   Context-aware exception system with standardized error codes
+*   ErrorMessageFormatter utility for structured error output
+*   Integration of ValidatorRegistry with ConfigHandler
+*   Advanced rule parsing for validators (required, type, range, regex)
+*   New exceptions: ConfigValidationException, ConfigNotFoundException, ConfigParserException, ServiceResolutionException, ServiceNotFoundException, ValidatorNotFoundException
+*   Example files: error-handling-demo.php, advanced-validation-demo.php
+*   Documentation: Error Handling Guide, Advanced Validation Guide
+
+### 🛠️ Changed
+
+*   Replaced legacy exceptions (ValidationException, ServiceException, ContainerException, ConfigurationException, InvalidConfigFormatException) with new context-aware exceptions
+*   Updated ConfigHandler to throw ConfigValidationException with detailed context
+*   Updated ServiceContainer and DependencyResolver to use ServiceResolutionException and ServiceNotFoundException
+
+### 🧹 Removed
+
+*   Deprecated legacy exception classes from `src/Exceptions/`
+*   Old validation references replaced with new context-aware system

@@ -6,6 +6,7 @@ namespace Dino\Core;
 use ReflectionClass;
 use Dino\Core\Utils\ClosureFactory;
 use Dino\Core\Utils\InstanceFactory;
+use Dino\Exceptions\ServiceResolutionException;
 
 class DependencyResolver
 {
@@ -32,7 +33,10 @@ class DependencyResolver
         $reflection = new ReflectionClass($className);
 
         if ($reflection->isInstantiable() === false) {
-            throw new \RuntimeException("Class {$className} is not instantiable.");
+            throw new ServiceResolutionException(
+                $className,
+                ['reason' => 'Class is not instantiable']
+            );
         }
 
         $constructor = $reflection->getConstructor();
@@ -79,7 +83,10 @@ class DependencyResolver
         $reflection = new ReflectionClass($className);
 
         if ($reflection->isInstantiable() === false) {
-            throw new \RuntimeException("Class {$className} is not instantiable.");
+            throw new ServiceResolutionException(
+                $className,
+                ['reason' => 'Class is not instantiable']
+            );
         }
 
         $constructor = $reflection->getConstructor();

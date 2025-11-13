@@ -3,38 +3,55 @@
 namespace Dino\Validation\Rules;
 
 use Dino\Contracts\Validation\ValidatorInterface;
-use Dino\Exceptions\ValidationException;
-use Dino\Validation\Utils\TypeNormalizer;
+use Dino\Exceptions\ConfigValidationException;
 
 class TypeValidator implements ValidatorInterface
 {
+    public function supports(string $rule): bool
+    {
+        return str_starts_with($rule, 'type');
+    }
+
     public function validate(mixed $value, array $context = []): void
     {
-        $rule = $context['rule'] ?? null;
-        $expectedType = 'string';
-
-        if ($rule !== null && str_starts_with($rule, 'type:')) {
-            $expectedType = substr($rule, strlen('type:'));
-        } elseif (isset($context['expectedType'])) {
-            $expectedType = $context['expectedType'];
+        $expectedType = $context['expectedType'] ?? null;
+        
+        if (!$expectedType) {
+            throw new ConfigValidationException(
+                $context['configKey'] ?? 'unknown',
+                array_merge($context, [
+                    'reason' => 'Expected type not specified in validation context',
+                    'rule' => 'type'
+                ])
+            );
         }
 
         $actualType = gettype($value);
-
-        // Use TypeNormalizer
-        $normalizedExpected = TypeNormalizer::normalize($expectedType);
-
-        if ($actualType !== $normalizedExpected) {
-            $configKey = $context['configKey'] ?? 'unknown';
-            throw new ValidationException(
-                "Configuration key '{$configKey}' must be of type '{$expectedType}', '{$actualType}' given",
-                $context
+        
+        // تبدیل نوع PHP به نام‌های خوانا
+        $typeMap = [
+            'boolean' => 'bool',
+            'integer' => 'int',
+            'double' => 'float',
+            'string' => 'string',
+            'array' => 'array',
+            'object' => 'object',
+            'NULL' => 'null'
+        ];
+        
+        $actualType = $typeMap[$actualType] ?? $actualType;
+        
+        if ($actualType !== $expectedType) {
+            throw new ConfigValidationException(
+                $context['configKey'] ?? 'unknown',
+                array_merge($context, [
+                    'reason' => sprintf("Expected type '%s', got '%s'", $expectedType, $actualType),
+                    'expectedType' => $expectedType,
+                    'actualType' => $actualType,
+                    'value' => $value,
+                    'rule' => 'type'
+                ])
             );
         }
-    }
-
-    public function supports(string $rule): bool
-    {
-        return str_starts_with($rule, 'type:');
     }
 }

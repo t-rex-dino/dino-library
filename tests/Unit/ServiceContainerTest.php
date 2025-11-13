@@ -5,7 +5,8 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Dino\Core\ServiceContainer;
 use Dino\Contracts\FactoryInterface;
-use Dino\Exceptions\ContainerException;
+use Dino\Exceptions\ServiceResolutionException;
+use Dino\Exceptions\ServiceNotFoundException;
 
 final class ServiceContainerTest extends TestCase
 {
@@ -43,7 +44,7 @@ final class ServiceContainerTest extends TestCase
 
     public function testGetMissingFactoryThrowsException(): void
     {
-        $this->expectException(ContainerException::class);
+        $this->expectException(ServiceNotFoundException::class);
 
         $container = new ServiceContainer();
         $container->get('unknown');

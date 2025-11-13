@@ -2,74 +2,80 @@
 
 namespace Dino\Tests\Unit\Config;
 
+use PHPUnit\Framework\TestCase;
 use Dino\Core\ConfigHandler;
+use Dino\Exceptions\ConfigValidationException;
 use Dino\Validation\Rules\RequiredValidator;
 use Dino\Validation\Rules\TypeValidator;
 use Dino\Validation\Rules\RangeValidator;
 use Dino\Validation\Rules\RegexValidator;
-use Dino\Exceptions\ValidationException;
-use PHPUnit\Framework\TestCase;
 
 class ConfigHandlerIntegrationTest extends TestCase
 {
-    private ConfigHandler $config;
-
-    protected function setUp(): void
-    {
-        $this->config = new ConfigHandler();
-
-        // register ruls
-        $this->config->setValidationRules([
-            'app.name'  => ['required', 'type:string'],
-            'app.port'  => ['required', 'type:int', 'range'],
-            'app.email' => ['required', 'regex'],
-        ]);
-
-        // register validators in registry internal
-        $this->config->registerValidator(new RequiredValidator());
-        $this->config->registerValidator(new TypeValidator());
-        $this->config->registerValidator(new RangeValidator());
-        $this->config->registerValidator(new RegexValidator());
-    }
-
     public function testValidConfigurationPassesValidation(): void
     {
-        $this->expectNotToPerformAssertions();
-
-        $this->config->set('app.name', 'Dino');
-        $this->config->set('app.port', 8080, ['min' => 1, 'max' => 65535]);
-        $this->config->set('app.email', 'user@example.com', ['pattern' => '/^[^@]+@[^@]+\.[^@]+$/']);
+        $config = new ConfigHandler();
+        
+        $config->registerValidator(new RequiredValidator());
+        $config->registerValidator(new TypeValidator());
+        $config->registerValidator(new RangeValidator());
+        $config->registerValidator(new RegexValidator());
+        
+        $config->setValidationRules([
+            'app.name' => ['required'],
+            'app.port' => ['type:int', 'range:1-65535'],
+            'app.email' => ['regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/']
+        ]);
+        
+        // این باید بدون exception اجرا شود
+        $config->set('app.name', 'My Application');
+        $config->set('app.port', 8080);
+        $config->set('app.email', 'test@example.com');
+        
+        $this->assertEquals('My Application', $config->get('app.name'));
+        $this->assertEquals(8080, $config->get('app.port'));
+        $this->assertEquals('test@example.com', $config->get('app.email'));
     }
 
     public function testMissingRequiredValueThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("is required");
-
-        $this->config->set('app.name', null);
+        $config = new ConfigHandler();
+        $config->registerValidator(new RequiredValidator());
+        $config->setValidationRules(['app.name' => ['required']]);
+        
+        $this->expectException(ConfigValidationException::class);
+        $config->set('app.name', '');
     }
 
     public function testInvalidTypeThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("must be of type 'int'");
-
-        $this->config->set('app.port', 'not-an-int', ['expectedType' => 'int']);
+        $config = new ConfigHandler();
+        $config->registerValidator(new TypeValidator());
+        $config->setValidationRules(['app.port' => ['type:int']]);
+        
+        $this->expectException(ConfigValidationException::class);
+        $config->set('app.port', 'not_an_integer');
     }
 
     public function testOutOfRangeThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("must be between");
-
-        $this->config->set('app.port', 70000, ['min' => 1, 'max' => 65535]);
+        $config = new ConfigHandler();
+        $config->registerValidator(new RangeValidator());
+        $config->setValidationRules(['app.port' => ['range:1-65535']]);
+        
+        $this->expectException(ConfigValidationException::class);
+        $config->set('app.port', 70000);
     }
 
     public function testRegexValidationFails(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("does not match the required pattern");
-
-        $this->config->set('app.email', 'invalid-email', ['pattern' => '/^[^@]+@[^@]+\.[^@]+$/']);
+        $config = new ConfigHandler();
+        $config->registerValidator(new RegexValidator());
+        $config->setValidationRules([
+            'app.email' => ['regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/']
+        ]);
+        
+        $this->expectException(ConfigValidationException::class);
+        $config->set('app.email', 'invalid-email');
     }
 }

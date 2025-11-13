@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Dino\Core\Config\Parsers\JsonConfigParser;
-use Dino\Exceptions\InvalidConfigFormatException;
+use Dino\Exceptions\ConfigParserException;
 
 class JsonConfigParserTest extends TestCase
 {
@@ -17,7 +17,7 @@ class JsonConfigParserTest extends TestCase
 
     public function testInvalidJson(): void
     {
-        $this->expectException(InvalidConfigFormatException::class);
+        $this->expectException(ConfigParserException::class);
         $parser = new JsonConfigParser();
         $parser->parse('{invalid}');
     }

@@ -3,7 +3,7 @@
 namespace Dino\Tests\Unit\Validation;
 
 use Dino\Validation\Rules\RequiredValidator;
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigValidationException;
 use PHPUnit\Framework\TestCase;
 
 class RequiredValidatorTest extends TestCase
@@ -33,16 +33,14 @@ class RequiredValidatorTest extends TestCase
 
     public function testNullValueThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("is required and cannot be empty");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate(null, ['configKey' => 'test.key']);
     }
 
     public function testEmptyStringThrowsException(): void
     {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("is required and cannot be empty");
+        $this->expectException(ConfigValidationException::class);
 
         $this->validator->validate('', ['configKey' => 'test.key']);
     }
@@ -51,11 +49,12 @@ class RequiredValidatorTest extends TestCase
     {
         try {
             $this->validator->validate(null, ['configKey' => 'app.name', 'rule' => 'required']);
-            $this->fail('Expected ValidationException was not thrown');
-        } catch (ValidationException $e) {
-            $this->assertEquals('app.name', $e->getConfigKey());
-            $this->assertEquals('required', $e->getRule());
-            $this->assertArrayHasKey('configKey', $e->getContext());
+            $this->fail('Expected ConfigValidationException was not thrown');
+        } catch (ConfigValidationException $e) {
+            $context = $e->getContext();
+            $this->assertEquals('app.name', $context['configKey']);
+            $this->assertEquals('required', $context['rule']);
+            $this->assertArrayHasKey('configKey', $context);
         }
     }
 }

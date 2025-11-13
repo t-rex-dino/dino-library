@@ -7,7 +7,7 @@ use Dino\Validation\Rules\RequiredValidator;
 use Dino\Validation\Rules\TypeValidator;
 use Dino\Validation\Rules\RangeValidator;
 use Dino\Validation\Rules\RegexValidator;
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigValidationException;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -38,6 +38,6 @@ try {
 
     // Invalid configuration (out of range)
     $config->set('app.port', 70000, ['min' => 1, 'max' => 65535]);
-} catch (ValidationException $e) {
+} catch (ConfigValidationException $e) {
     echo "❌ Validation failed: " . $e->getMessage() . "\n";
 }

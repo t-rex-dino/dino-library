@@ -3,18 +3,21 @@
 namespace Dino\Validation\Rules;
 
 use Dino\Contracts\Validation\ValidatorInterface;
-use Dino\Exceptions\ValidationException;
+use Dino\Exceptions\ConfigValidationException;
 
 class RegexValidator implements ValidatorInterface
 {
     public function validate(mixed $value, array $context = []): void
     {
         $pattern = $context['pattern'] ?? null;
+        $configKey = $context['configKey'] ?? 'unknown';
 
         if ($pattern === null) {
-            throw new ValidationException(
-                "Regex pattern is required for regex validation",
-                $context
+            throw new ConfigValidationException(
+                $configKey,
+                array_merge($context, [
+                    'reason' => 'Regex pattern is required for regex validation'
+                ])
             );
         }
 
@@ -23,10 +26,11 @@ class RegexValidator implements ValidatorInterface
         }
 
         if (!preg_match($pattern, $value)) {
-            $configKey = $context['configKey'] ?? 'unknown';
-            throw new ValidationException(
-                "Configuration key '{$configKey}' does not match the required pattern",
-                $context
+            throw new ConfigValidationException(
+                $configKey,
+                array_merge($context, [
+                    'reason' => "Value does not match the required regex pattern"
+                ])
             );
         }
     }
